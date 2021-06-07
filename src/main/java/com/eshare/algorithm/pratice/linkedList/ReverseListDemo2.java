@@ -37,36 +37,33 @@ public class ReverseListDemo2 {
      * @param head
      * @return
      */
-    public static ListNode reverseBetween(ListNode head, int m, int n) {
-        if (head == null || m>=n) {
-            return null;
+    public static ListNode reverseBetween(ListNode head, int left, int right) {
+        if (null == head || left>=right) {
+            return head;
         }
 
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
-        head = dummy;
-
-        for(int i =1 ; i<m; i++){
-            head=head.next;
-        }
-        //找出不变化的指针
-        ListNode mNode = head.next;
-        ListNode preM = head;
-        //用于内部排序的指针
-        ListNode nNode = mNode;
-        ListNode postN = nNode.next;
-
-        //m-n区间排序
-        for (int i = m; i < n; i++) {
-            ListNode next = postN.next;
-            postN.next = nNode;
-            nNode = postN;
-            postN = next;
+        ListNode leftNodePre  = dummy;
+        //寻找Left的位置
+        for(int i=1;i<left;i++){
+            leftNodePre = leftNodePre.next;
         }
 
-        mNode.next = postN;
-        preM.next = nNode;
+        //创建指针变量用于left对应节点操作
+        ListNode leftNode = leftNodePre.next;
+        ///创建指针变量用于right对应节点操作
+        ListNode rightNodePre = leftNode;
+        ListNode rightNodeCur = leftNode.next;
 
+        for(int i=left;i<right;i++){
+            ListNode next = rightNodeCur.next;
+            rightNodeCur.next = rightNodePre;
+            rightNodePre = rightNodeCur;
+            rightNodeCur = next;
+        }
+        leftNode.next = rightNodeCur;
+        leftNodePre.next = rightNodePre;
 
 
         return dummy.next;
